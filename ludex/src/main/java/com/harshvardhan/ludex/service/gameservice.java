@@ -11,14 +11,25 @@ import com.harshvardhan.ludex.model.game;
 @Service 
 public class gameservice {
 
-  public List<game> games = new ArrayList<>();
+   public List<game> Games = new ArrayList<>();
 
-  public List<game> getAllGames(){
-     return games;
-    }
+   public List<game> getAllgame(){
+    return Games;
+   }
 
-  public game addgames(game g){
-    games.add(g);
+   public game addGames(game g){
+    Games.add(g);
     return g;
-  }
+   }
+ 
+   public boolean deletegames(int id){
+
+    for(game game : Games){
+        if(game.getGame_id() == id){
+            Games.remove(game);
+            return true;
+        }
+    }
+    return false;
+   }
 }
