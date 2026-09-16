@@ -14,31 +14,49 @@ import org.springframework.web.bind.annotation.RestController;
 import com.harshvardhan.ludex.model.game;
 import com.harshvardhan.ludex.service.gameservice;
 
+/**
+ * REST Controller for managing game-related API endpoints.
+ * Base URL: /game
+ */
 @RestController
 @RequestMapping("/game")
 public class gamecontroller {
 
-    @Autowired 
-    private  gameservice gameservice;
+  /** Injects the game service to handle business logic. */
+  @Autowired
+  private gameservice gameservice;
 
-    @GetMapping ("/getallgames")
-    public List<game> getallgames(){
-      return gameservice.getAllgame();
-    }
+  /**
+   * Retrieves all games stored in the in-memory list.
+   *
+   * @return a list of all {@link game} objects
+   */
+  @GetMapping("/allgames")
+  public List<game> getAllGames() {
+    return gameservice.getallgames();
+  }
 
-    @PostMapping("/addgame")
-    public game addgames(@RequestBody game g){
-      return gameservice.addGames(g);
-    }
+  /**
+   * Adds a new game to the in-memory list.
+   *
+   * @param g the {@link game} object received in the request body
+   * @return the added {@link game} object
+   */
+  @PostMapping("/addgames")
+  public game addgames(@RequestBody game g) {
+    gameservice.addGames(g);
+    return g;
+  }
 
-    @DeleteMapping ("/{id}")
-    public String deletgams(@PathVariable int id){
-        boolean deleted = gameservice.deletegames(id);
-
-        if(deleted){
-            return "Game is Deletd";
-        }
-        return "failed";
-}
+  /**
+   * Deletes a game by its ID.
+   *
+   * @param id the ID of the game to be deleted (from the URL path)
+   * @return {@code true} if the game was deleted, {@code false} otherwise
+   */
+  @DeleteMapping("/{id}")
+  public boolean deletegame(@PathVariable int id) {
+    return gameservice.deletegame(id);
+  }
 
 }
