@@ -56,8 +56,7 @@ public class gamecontroller {
    */
   @DeleteMapping("/{id}")
   public String deletegame(@PathVariable int id) {
-    boolean deleted = gameservice.deletegame(id);
-
+    boolean deleted = gameservice.deleteGame(id);
     if(deleted){
       return "Game is deleted";
     } 

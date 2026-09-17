@@ -1,7 +1,7 @@
 package com.harshvardhan.ludex.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -38,24 +38,16 @@ public class gameservice {
         return g;
     }
 
-    /**
-     * Deletes a game from the list by its ID.
-     * Uses an Iterator to safely remove the element while iterating.
-     *
-     * @param id the ID of the game to delete
-     * @return {@code true} if the game was found and removed, {@code false}
-     *         otherwise
-     */
-    public boolean deletegame(int id) {
-        Iterator<game> iterator = Games.iterator();
-        while (iterator.hasNext()) {
-            game game = iterator.next();
-            if (game.getGame_id() == id) {
-                iterator.remove();
-                return true;
-            }
+  public boolean deleteGame(int id) {
+
+    for (game g : Games) {
+
+        if (g.getGame_id() == id) {
+            Games.remove(g);
+            return true;
         }
-        return false;
     }
 
+    return false;
+}
 }
