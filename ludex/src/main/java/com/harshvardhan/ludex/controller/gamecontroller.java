@@ -60,7 +60,7 @@ public class gamecontroller {
     if(deleted){
       return "Game is deleted";
     } 
-    return "Somthing is wrong";
+    return "Failed";
   }
  
 }
