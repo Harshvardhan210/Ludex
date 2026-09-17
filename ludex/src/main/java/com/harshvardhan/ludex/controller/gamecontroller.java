@@ -55,8 +55,13 @@ public class gamecontroller {
    * @return {@code true} if the game was deleted, {@code false} otherwise
    */
   @DeleteMapping("/{id}")
-  public boolean deletegame(@PathVariable int id) {
-    return gameservice.deletegame(id);
-  }
+  public String deletegame(@PathVariable int id) {
+    boolean deleted = gameservice.deletegame(id);
 
+    if(deleted){
+      return "Game is deleted";
+    } 
+    return "Somthing is wrong";
+  }
+ 
 }
