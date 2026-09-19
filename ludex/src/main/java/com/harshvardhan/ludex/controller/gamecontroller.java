@@ -64,5 +64,7 @@ public class gamecontroller {
     return ResponseEntity.ok("Game Added to the favrite");
 
   }
+
+  
  
 }

@@ -19,4 +19,6 @@ public class game {
     /** A brief description of the game. */
     private String game_description;
 
+    private String section = "Home";
+
 }

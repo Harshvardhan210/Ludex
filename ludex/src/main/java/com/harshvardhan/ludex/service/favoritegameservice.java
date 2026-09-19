@@ -20,6 +20,7 @@ public List<game> FavoriteGame = new ArrayList<>();
 public String addfavorites(int id){
     for(game g : gameservice.getallgames()){
         if (g.getGame_id() == id){
+            g.setSection("Favorite");
             FavoriteGame.add(g);
             break;
         }
@@ -32,6 +33,8 @@ public String addfavorites(int id){
     public List<game> getallfavorite(){
         return FavoriteGame;
     }
+
+   
 }
 
     
