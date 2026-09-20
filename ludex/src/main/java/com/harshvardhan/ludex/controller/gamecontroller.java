@@ -65,6 +65,16 @@ public class gamecontroller {
 
   }
 
+  @DeleteMapping ("/delete/{id}")
+  public String deletefavgames(@PathVariable int id){
+    boolean deletedfav = fav_game.deletefavgame(id);
+    if(deletedfav){
+      return "game deleted in the Favorites";
+    }
+    return "Failed";
+  }
+  
+
   
  
 }

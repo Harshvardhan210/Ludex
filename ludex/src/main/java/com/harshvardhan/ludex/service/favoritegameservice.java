@@ -34,6 +34,16 @@ public String addfavorites(int id){
         return FavoriteGame;
     }
 
+    public boolean deletefavgame(int id){
+        for (game g : FavoriteGame){
+
+            if (g.getGame_id() == id) {
+                FavoriteGame.remove(g);
+                return true;    
+            }
+        }
+        return false;
+    }
    
 }
 
