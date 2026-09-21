@@ -39,6 +39,7 @@ public String addfavorites(int id){
 
             if (g.getGame_id() == id) {
                 FavoriteGame.remove(g);
+                g.setSection("Home");
                 return true;    
             }
         }
