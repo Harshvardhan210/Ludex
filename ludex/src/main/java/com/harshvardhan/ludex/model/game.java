@@ -1,5 +1,9 @@
 package com.harshvardhan.ludex.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 /**
@@ -8,9 +12,14 @@ import lombok.Data;
  * getters, setters, equals, hashCode, and toString methods.
  */
 @Data
+@Entity 
 public class game {
 
     /** Unique identifier for the game. */
+    @Id 
+    @GeneratedValue(
+        strategy = GenerationType.IDENTITY
+    )
     private int game_id;
 
     /** Name/title of the game. */

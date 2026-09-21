@@ -7,13 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.harshvardhan.ludex.model.game;
+import com.harshvardhan.ludex.repository.GameRepository;
 
 
 @Service 
 public class favoritegameservice {
 
-    @Autowired 
-    private gameservice gameservice;
+    
+    private final gameservice gameservice;
+    private final GameRepository gameRepository;
+
+    public favoritegameservice(gameservice gameservice, GameRepository gameRepository){
+        this.gameservice = gameservice;
+        this.gameRepository = gameRepository;
+    }
 
 public List<game> FavoriteGame = new ArrayList<>();
 
