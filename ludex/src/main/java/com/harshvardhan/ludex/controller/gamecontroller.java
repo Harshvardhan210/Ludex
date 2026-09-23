@@ -2,7 +2,7 @@ package com.harshvardhan.ludex.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +16,8 @@ import com.harshvardhan.ludex.model.game;
 import com.harshvardhan.ludex.service.favoritegameservice;
 import com.harshvardhan.ludex.service.gameservice;
 
+import jakarta.validation.Valid;
+
 /**
  * REST Controller for managing game-related API endpoints.
  * Base URL: /game
@@ -25,11 +27,14 @@ import com.harshvardhan.ludex.service.gameservice;
 public class gamecontroller {
 
   /** Injects the game service to handle business logic. */
-  @Autowired
-  private gameservice gameservice;
+  private final gameservice gameservice;
 
-  @Autowired 
-  private favoritegameservice fav_game;
+  private final favoritegameservice fav_game;
+
+  gamecontroller(gameservice gameservice, favoritegameservice fav_game) {
+    this.gameservice = gameservice;
+    this.fav_game = fav_game;
+  }
 
   @GetMapping("/allgames")
   public List<game> getAllGames() {
@@ -37,7 +42,7 @@ public class gamecontroller {
   }
 
   @PostMapping("/addgames")
-  public game addgames(@RequestBody game g) {
+  public game addgames(@Valid @RequestBody game g) {
     gameservice.addGames(g);
     return g;
   }
