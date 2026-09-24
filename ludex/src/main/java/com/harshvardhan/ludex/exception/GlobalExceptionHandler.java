@@ -1,15 +1,20 @@
 package com.harshvardhan.ludex.exception;
 
+import org.springframework.http.HttpStatus;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice 
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler (GameNotFoundException.class)
-    public String handleGameNotFound(GameNotFoundException e)
-    {
-        return e.getMessage();
+    @ExceptionHandler(GameNotFoundException.class)
+    public ResponseEntity<String> handleGameNotFound(GameNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
     }
-    
+
 }
