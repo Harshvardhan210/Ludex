@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.Id;
 import lombok.Data;
 
@@ -26,6 +27,11 @@ public class game {
 
     /** Name/title of the game. */
     @NotBlank(message = "Game name is required")
+    @Size (
+        min = 2,
+        max = 150,
+        message = "Game name must be between 2 and 100 characters"
+    )
     private String game_name;
 
     /** A brief description of the game. */
