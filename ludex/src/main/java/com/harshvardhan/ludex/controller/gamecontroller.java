@@ -1,7 +1,7 @@
 package com.harshvardhan.ludex.controller;
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +45,11 @@ public class gamecontroller {
   public game addgames(@Valid @RequestBody game g) {
     gameservice.addGames(g);
     return g;
+  }
+
+  @GetMapping ("/{id}")
+  public ResponseEntity<game> getgamebyid(@PathVariable int id){
+    return ResponseEntity.ok(gameservice.findgame(id));
   }
 
   @DeleteMapping("/{id}")

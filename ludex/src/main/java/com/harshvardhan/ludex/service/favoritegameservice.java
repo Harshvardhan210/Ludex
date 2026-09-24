@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.harshvardhan.ludex.exception.GameNotFoundException;
 import com.harshvardhan.ludex.model.game;
 import com.harshvardhan.ludex.repository.GameRepository;
 
@@ -17,7 +18,8 @@ public class favoritegameservice {
     }
 
     public String addfavorites(int id) {
-        game g = gameRepository.findById(id).orElseThrow(() -> new RuntimeException("Game not found"));
+        game g = gameRepository.findById(id).orElseThrow(() -> 
+             new GameNotFoundException("Game with id " + id + " not found"));
 
         g.setSection("Favorite");
 

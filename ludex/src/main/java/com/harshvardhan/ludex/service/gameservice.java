@@ -3,9 +3,11 @@ package com.harshvardhan.ludex.service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.harshvardhan.ludex.exception.GameNotFoundException;
 import com.harshvardhan.ludex.model.game;
 import com.harshvardhan.ludex.repository.GameRepository;
 
@@ -30,6 +32,12 @@ public class gameservice {
 
     public game addGames(game g) {
         return gameRepository.save(g);
+    }
+
+    public game findgame(int id){
+        
+        return gameRepository.findById(id).orElseThrow(() -> 
+          new GameNotFoundException( "Game with ID " + id + " not found") );
     }
 
     public boolean deleteGame(int id) {
