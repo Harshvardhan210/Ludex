@@ -18,11 +18,11 @@
 
 ## 📖 What is Ludex?
 
-**Ludex** is a backend REST API that lets you manage a personal game library. You can add games, browse all games, mark your favorites, and remove games — all through simple HTTP requests.
+**Ludex** is a backend REST API that lets you manage a personal game library. You can add games, browse all games, fetch a game by ID, mark your favorites, and remove games — all through simple HTTP requests.
 
 Think of it as your personal **game catalog with a favorites shelf**.
 
-> **Current Stage:** Early development — core CRUD and favorites are working. Database persistence for favorites and several production-ready features are still being built.
+> **Current Stage:** Active development — core CRUD, input validation, error handling, and favorites are fully working. Favorites persistence and several production-ready features are still being built.
 
 ---
 
@@ -43,7 +43,7 @@ Think of it as your personal **game catalog with a favorites shelf**.
 
 ## 🏗 Architecture Overview
 
-Ludex follows a classic **3-Layer Spring Boot architecture**:
+Ludex follows a classic **3-Layer Spring Boot architecture** with a dedicated exception handling layer:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -55,7 +55,7 @@ Ludex follows a classic **3-Layer Spring Boot architecture**:
 │                  CONTROLLER LAYER                        │
 │   gamecontroller.java  │  healthcontroller.java         │
 │   • Receives HTTP requests                              │
-│   • Validates input, delegates to Services              │
+│   • Validates input (@Valid), delegates to Services     │
 │   • Returns HTTP responses                              │
 └──────────────────────────┬──────────────────────────────┘
                            │
@@ -83,24 +83,30 @@ Ludex follows a classic **3-Layer Spring Boot architecture**:
 │   Columns: game_id, game_name, game_description,        │
 │            section                                      │
 └─────────────────────────────────────────────────────────┘
+
+           ↕  (catches exceptions from any layer)
+┌─────────────────────────────────────────────────────────┐
+│              EXCEPTION HANDLING LAYER                    │
+│   GlobalExceptionHandler.java                           │
+│   • @RestControllerAdvice — handles errors globally     │
+│   • GameNotFoundException → 404 JSON response           │
+│   • MethodArgumentNotValidException → 400 JSON response │
+└─────────────────────────────────────────────────────────┘
 ```
 
-### Request Flow (Example: Add a Game)
+### Request Flow (Example: Get a Game by ID)
 
 ```
-POST /game/addgames
+GET /game/{id}
        │
        ▼
-gamecontroller.addgames()   ← receives JSON body
+gamecontroller.getgamebyid()   ← extracts path variable
        │
        ▼
-gameservice.addGames()      ← business logic
+gameservice.findgame(id)       ← queries DB, throws GameNotFoundException if missing
        │
-       ▼
-GameRepository.save()       ← persists to PostgreSQL
-       │
-       ▼
-Returns saved game object as JSON
+       ▼ (if found)                     ▼ (if not found)
+Returns 200 OK with game JSON   GlobalExceptionHandler → 404 JSON error
 ```
 
 ---
@@ -109,26 +115,30 @@ Returns saved game object as JSON
 
 ```
 ludex/
-└── ludex/                          # Spring Boot root
-    ├── pom.xml                     # Maven dependencies & build config
+└── ludex/                           # Spring Boot root
+    ├── pom.xml                      # Maven dependencies & build config
     └── src/
         ├── main/
         │   ├── java/com/harshvardhan/ludex/
-        │   │   ├── LudexApplication.java          # 🚀 App entry point
+        │   │   ├── LudexApplication.java           # 🚀 App entry point
         │   │   ├── controller/
-        │   │   │   ├── gamecontroller.java        # Game & Favorites API
-        │   │   │   └── healthcontroller.java      # Health check endpoint
+        │   │   │   ├── gamecontroller.java          # Game & Favorites API
+        │   │   │   └── healthcontroller.java        # Health check endpoint
+        │   │   ├── exception/
+        │   │   │   ├── GlobalExceptionHandler.java  # 🛡 Global error handler
+        │   │   │   ├── GameNotFoundException.java   # Custom 404 exception
+        │   │   │   └── ErrorResponse.java           # Structured error body
         │   │   ├── model/
-        │   │   │   └── game.java                  # Game entity (DB table)
+        │   │   │   └── game.java                   # Game entity (DB table)
         │   │   ├── repository/
-        │   │   │   └── GameRepository.java        # JPA data access layer
+        │   │   │   └── GameRepository.java          # JPA data access layer
         │   │   └── service/
-        │   │       ├── gameservice.java           # Game business logic
-        │   │       └── favoritegameservice.java   # Favorites business logic
+        │   │       ├── gameservice.java             # Game business logic
+        │   │       └── favoritegameservice.java     # Favorites business logic
         │   └── resources/
-        │       └── application.properties         # DB & app configuration
+        │       └── application.properties           # DB & app configuration
         └── test/
-            └── java/                              # Unit/integration tests
+            └── java/                               # Unit/integration tests
 ```
 
 ---
@@ -141,6 +151,7 @@ ludex/
 | **Spring Boot** | 4.1.1 | Web framework & auto-configuration |
 | **Spring Web MVC** | 4.1.1 | REST API endpoints |
 | **Spring Data JPA** | 4.1.1 | Database ORM abstraction |
+| **Spring Validation** | 4.1.1 | Bean validation (`@Valid`, `@NotBlank`, etc.) |
 | **Hibernate** | (bundled) | JPA implementation / SQL generation |
 | **PostgreSQL** | Latest | Primary relational database |
 | **Lombok** | Latest | Reduces boilerplate (getters/setters) |
@@ -171,6 +182,7 @@ Hi, this program works!
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/game/allgames` | Get all games in the library |
+| `GET` | `/game/{id}` | Get a single game by its ID |
 | `POST` | `/game/addgames` | Add a new game |
 | `DELETE` | `/game/{id}` | Delete a game by its ID |
 
@@ -195,8 +207,29 @@ Returns a list of all games stored in the database.
 ]
 ```
 
+#### GET `/game/{id}`
+Returns a single game by its ID. Returns a structured `404` error if the game does not exist.
+
+**Sample Response (200 OK):**
+```json
+{
+  "game_id": 1,
+  "game_name": "The Witcher 3",
+  "game_description": "An open-world RPG masterpiece.",
+  "section": "Home"
+}
+```
+
+**Sample Response (404 Not Found):**
+```json
+{
+  "status": 404,
+  "message": "Game with ID 99 not found"
+}
+```
+
 #### POST `/game/addgames`
-Adds a new game to the library.
+Adds a new game to the library. Input is validated — `game_name` and `game_description` are required.
 
 **Request Body:**
 ```json
@@ -206,13 +239,21 @@ Adds a new game to the library.
 }
 ```
 
-**Sample Response:**
+**Sample Response (200 OK):**
 ```json
 {
   "game_id": 3,
   "game_name": "Elden Ring",
   "game_description": "A brutal open-world action RPG.",
   "section": "Home"
+}
+```
+
+**Sample Response (400 Bad Request — validation failure):**
+```json
+{
+  "status": 400,
+  "message": "game_name must not be blank"
 }
 ```
 
@@ -424,11 +465,14 @@ Here's an honest snapshot of the project's current state:
 |---|---|---|
 | Add a game | ✅ Working | Persisted to PostgreSQL |
 | Get all games | ✅ Working | Returns full list from DB |
+| Get game by ID | ✅ Working | Returns 404 JSON error if not found |
 | Delete a game | ✅ Working | Checks if ID exists first |
 | Add to favorites | ✅ Working | Changes `section` to `"Favorite"` |
 | View favorites | ✅ Working | Returns in-memory list |
 | Remove from favorites | ✅ Working | Reverts `section` to `"Home"` |
 | Health check endpoint | ✅ Working | `/home` returns confirmation |
+| Input validation | ✅ Working | Returns `400` with message on invalid input |
+| Global error handling | ✅ Working | Structured JSON errors for 404 & 400 |
 
 ### 🚩 Known Issues & Limitations
 
@@ -436,12 +480,10 @@ Here's an honest snapshot of the project's current state:
 |---|---|---|
 | **Favorites not persisted** | 🔴 High | Favorites are stored in an `ArrayList` in memory. Restarting the server **wipes all favorites**. |
 | **No authentication** | 🔴 High | All API endpoints are public — anyone can add/delete games. |
-| **No input validation** | 🟠 Medium | Empty `game_name` or `game_description` can be saved without errors. |
 | **Naming conventions** | 🟡 Low | Class names like `game`, `gamecontroller` use lowercase, against Java conventions. |
-| **No error handling** | 🟠 Medium | No global exception handler; errors return raw Spring error pages. |
 | **No pagination** | 🟡 Low | `getAllGames()` returns the entire table with no limit. |
 | **No tests** | 🟠 Medium | The `test/` directory exists but no tests are written yet. |
-| **Typo in response** | 🟡 Low | `"Game Added to the favrite"` (typo: "favrite") in the response message. |
+| **Typo in response** | 🟡 Low | `"Game Added to the favrite"` (typo: "favrite") in the add-favorite response message. |
 
 ---
 
