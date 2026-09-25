@@ -1,7 +1,6 @@
 package com.harshvardhan.ludex.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.harshvardhan.ludex.model.game;
+import com.harshvardhan.ludex.dto.GameRequestDTO;
+import com.harshvardhan.ludex.dto.GameResponseDTO;
 import com.harshvardhan.ludex.service.favoritegameservice;
 import com.harshvardhan.ludex.service.gameservice;
 
@@ -36,56 +36,55 @@ public class gamecontroller {
     this.fav_game = fav_game;
   }
 
+  /** Returns all games. */
   @GetMapping("/allgames")
-  public List<game> getAllGames() {
-    return gameservice.getallgames();
+  public ResponseEntity<List<GameResponseDTO>> getAllGames() {
+    return ResponseEntity.ok(gameservice.getallgames());
   }
 
+  /** Adds a new game. */
   @PostMapping("/addgames")
-  public game addgames(@Valid @RequestBody game g) {
-    gameservice.addGames(g);
-    return g;
+  public ResponseEntity<GameResponseDTO> addgames(@Valid @RequestBody GameRequestDTO dto) {
+    GameResponseDTO saved = gameservice.addGames(dto);
+    return ResponseEntity.ok(saved);
   }
 
-  @GetMapping ("/{id}")
-  public ResponseEntity<game> getgamebyid(@PathVariable int id){
+  /** Gets a single game by ID. */
+  @GetMapping("/{id}")
+  public ResponseEntity<GameResponseDTO> getgamebyid(@PathVariable int id) {
     return ResponseEntity.ok(gameservice.findgame(id));
   }
 
+  /** Deletes a game by ID. */
   @DeleteMapping("/{id}")
-  public String deletegame(@PathVariable int id) {
+  public ResponseEntity<String> deletegame(@PathVariable int id) {
     boolean deleted = gameservice.deleteGame(id);
-    if(deleted){
-      return "Game is deleted";
-    } 
-    return "Failed";
-  }
-
-
-  @GetMapping("/favorites")
-  public List<game> getallfavgames()
-  {
-    return fav_game.getallfavorite();
-  }
-
-  @PostMapping ("/addfavorites/{game_id}")
-  public ResponseEntity<String> addfavgame(@PathVariable("game_id") int id){
-    fav_game.addfavorites(id);
-    return ResponseEntity.ok("Game Added to the favrite");
-
-  }
-
-  @DeleteMapping ("/delete/{id}")
-  public String deletefavgames(@PathVariable int id){
-    boolean deletedfav = fav_game.deletefavgame(id);
-    if(deletedfav){
-      
-      return "game deleted in the Favorites";
+    if (deleted) {
+      return ResponseEntity.ok("Game is deleted");
     }
-    return "Failed";
+    return ResponseEntity.badRequest().body("Failed");
   }
-  
 
-  
- 
+  /** Returns all favorite games. */
+  @GetMapping("/favorites")
+  public ResponseEntity<List<GameResponseDTO>> getallfavgames() {
+    return ResponseEntity.ok(fav_game.getallfavorite());
+  }
+
+  /** Adds a game to favorites by ID. */
+  @PostMapping("/addfavorites/{game_id}")
+  public ResponseEntity<String> addfavgame(@PathVariable("game_id") int id) {
+    fav_game.addfavorites(id);
+    return ResponseEntity.ok("Game added to Favorites");
+  }
+
+  /** Removes a game from favorites by ID. */
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<String> deletefavgames(@PathVariable int id) {
+    boolean deleted = fav_game.deletefavgame(id);
+    if (deleted) {
+      return ResponseEntity.ok("Game removed from Favorites");
+    }
+    return ResponseEntity.badRequest().body("Failed");
+  }
 }
