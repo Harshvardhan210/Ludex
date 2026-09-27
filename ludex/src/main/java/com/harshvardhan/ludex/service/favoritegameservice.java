@@ -10,6 +10,10 @@ import com.harshvardhan.ludex.exception.GameNotFoundException;
 import com.harshvardhan.ludex.model.game;
 import com.harshvardhan.ludex.repository.GameRepository;
 
+/**
+ * Service class handling the business logic for managing favorite games.
+ * Provides functionality to add, retrieve and remove games from favorites.
+ */
 @Service
 public class favoritegameservice {
 
@@ -38,6 +42,8 @@ public class favoritegameservice {
     /**
      * Marks the game with the given ID as a Favorite.
      *
+     * @param id the ID of the game to mark as favorite
+     * @return a success string if the game is marked as favorite
      * @throws GameNotFoundException if the game does not exist
      */
     public String addfavorites(int id) {
@@ -50,6 +56,8 @@ public class favoritegameservice {
 
     /**
      * Returns all games currently in the Favorite section.
+     *
+     * @return A list of {@link GameResponseDTO} representing all favorite games
      */
     public List<GameResponseDTO> getallfavorite() {
         return gameRepository.findBySection("Favorite")
@@ -61,6 +69,7 @@ public class favoritegameservice {
     /**
      * Moves the game back to the "Home" section (removes from favorites).
      *
+     * @param id the ID of the game to remove from favorites
      * @return {@code true} if successful, {@code false} if not found or not in
      *         Favorites
      */

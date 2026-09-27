@@ -56,6 +56,8 @@ public class gameservice {
 
     /**
      * Returns all games as response DTOs.
+     *
+     * @return A list of {@link GameResponseDTO} objects representing all games
      */
     public List<GameResponseDTO> getallgames() {
         return gameRepository.findAll()
@@ -67,6 +69,9 @@ public class gameservice {
     /**
      * Persists a new game from the request DTO and returns the saved game as a
      * response DTO.
+     *
+     * @param dto the request payload containing game details
+     * @return the saved game mapped to a {@link GameResponseDTO}
      */
     public GameResponseDTO addGames(GameRequestDTO dto) {
         game saved = gameRepository.save(toEntity(dto));
@@ -76,6 +81,8 @@ public class gameservice {
     /**
      * Finds a game by ID and returns it as a response DTO.
      *
+     * @param id the ID of the game to find
+     * @return the game mapped to a {@link GameResponseDTO}
      * @throws GameNotFoundException if no game with {@code id} exists
      */
     public GameResponseDTO findgame(int id) {
@@ -87,6 +94,7 @@ public class gameservice {
     /**
      * Deletes the game with the given ID.
      *
+     * @param id the ID of the game to delete
      * @return {@code true} if the game existed and was deleted, {@code false}
      *         otherwise
      */
