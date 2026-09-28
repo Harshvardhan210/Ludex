@@ -31,7 +31,7 @@ public class favoritegameservice {
         return new GameResponseDTO(
                 g.getGame_id(),
                 g.getGame_name(),
-                g.getGame_description(),
+                g.getGenre(),
                 g.getSection());
     }
 

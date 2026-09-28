@@ -36,7 +36,7 @@ public class gameservice {
         return new GameResponseDTO(
                 g.getGame_id(),
                 g.getGame_name(),
-                g.getGame_description(),
+                g.getGenre(),
                 g.getSection());
     }
 
@@ -46,7 +46,7 @@ public class gameservice {
     private game toEntity(GameRequestDTO dto) {
         game g = new game();
         g.setGame_name(dto.getGame_name());
-        g.setGame_description(dto.getGame_description());
+        g.setGenre(dto.getGenre());
         return g;
     }
 

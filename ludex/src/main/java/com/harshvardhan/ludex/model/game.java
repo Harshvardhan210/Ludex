@@ -1,5 +1,7 @@
 package com.harshvardhan.ludex.model;
 
+import org.hibernate.annotations.ManyToAny;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +9,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 /**
@@ -35,8 +39,10 @@ public class game {
     private String game_name;
 
     /** A brief description of the game. */
-    @NotBlank(message = "description is required")
-    private String game_description;
+    @NotBlank(message = "Genre is required")
+    @ManyToOne 
+    @JoinColumn (name = "genre_id")
+    private String genre;
 
     private String section = "Home";
 

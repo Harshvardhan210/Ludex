@@ -18,5 +18,5 @@ public class GameRequestDTO {
 
     /** Short description of the game. */
     @NotBlank(message = "Game description is required")
-    private String game_description;
+    private String genre;
 }
