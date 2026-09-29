@@ -1,0 +1,122 @@
+﻿diff --git a/ludex/src/main/java/com/harshvardhan/ludex/dto/GameRequestDTO.java b/ludex/src/main/java/com/harshvardhan/ludex/dto/GameRequestDTO.java
+index 4994d40..f3c20c6 100644
+--- a/ludex/src/main/java/com/harshvardhan/ludex/dto/GameRequestDTO.java
++++ b/ludex/src/main/java/com/harshvardhan/ludex/dto/GameRequestDTO.java
+@@ -1,24 +1,42 @@
+ package com.harshvardhan.ludex.dto;
+ 
+ import jakarta.validation.constraints.NotBlank;
++import jakarta.validation.constraints.NotNull;
+ import jakarta.validation.constraints.Positive;
+ import jakarta.validation.constraints.Size;
+-import lombok.Data;
++
+ 
+ /**
+  * Data Transfer Object for incoming game creation/update requests.
+  * Carries only the fields the client is allowed to supply.
+  */
+-@Data
+ public class GameRequestDTO {
+ 
+-    /** Title of the game. */
+     @NotBlank(message = "Game name is required")
+-    @Size(min = 2, max = 150, message = "Game name must be between 2 and 150 characters")
+-    private String game_name;
++    @Size(
++            min = 2,
++            max = 100,
++            message = "Game name must be between 2 and 100 characters"
++    )
++    private String name;
+ 
+-    /** Short description of the game. */
+-    @NotBlank(message = "Genre ID is required")
+-    @Positive (message = "Genre ID must be positive")
++    @NotNull(message = "Genre ID is required")
++    @Positive(message = "Genre ID must be positive")
+     private Integer genre_id;
+-}
++
++    public String getName() {
++        return name;
++    }
++
++    public void setName(String name) {
++        this.name = name;
++    }
++
++    public Integer getGenre_id() {
++        return genre_id;
++    }
++
++    public void setGenre_id(Integer genre_id) {
++        this.genre_id = genre_id;
++    }
++}
+\ No newline at end of file
+diff --git a/ludex/src/main/java/com/harshvardhan/ludex/model/game.java b/ludex/src/main/java/com/harshvardhan/ludex/model/game.java
+index 7b57f2d..7eec96a 100644
+--- a/ludex/src/main/java/com/harshvardhan/ludex/model/game.java
++++ b/ludex/src/main/java/com/harshvardhan/ludex/model/game.java
+@@ -1,11 +1,10 @@
+ package com.harshvardhan.ludex.model;
+ 
+-import org.hibernate.annotations.ManyToAny;
+ 
+ import jakarta.persistence.Entity;
+ import jakarta.persistence.GeneratedValue;
+ import jakarta.persistence.GenerationType;
+-import jakarta.validation.Valid;
++
+ import jakarta.validation.constraints.NotBlank;
+ import jakarta.validation.constraints.Size;
+ import jakarta.persistence.Id;
+diff --git a/ludex/src/main/java/com/harshvardhan/ludex/service/GenreService.java b/ludex/src/main/java/com/harshvardhan/ludex/service/GenreService.java
+index 2290a84..62a8778 100644
+--- a/ludex/src/main/java/com/harshvardhan/ludex/service/GenreService.java
++++ b/ludex/src/main/java/com/harshvardhan/ludex/service/GenreService.java
+@@ -2,9 +2,12 @@ package com.harshvardhan.ludex.service;
+ 
+ import java.util.List;
+ 
++import org.springframework.stereotype.Service;
++
+ import com.harshvardhan.ludex.model.genre;
+ import com.harshvardhan.ludex.repository.GenreRepository;
+ 
++@Service
+ public class GenreService {
+ 
+     private final GenreRepository genreRepository;
+diff --git a/ludex/src/main/java/com/harshvardhan/ludex/service/gameservice.java b/ludex/src/main/java/com/harshvardhan/ludex/service/gameservice.java
+index a773aab..28cce99 100644
+--- a/ludex/src/main/java/com/harshvardhan/ludex/service/gameservice.java
++++ b/ludex/src/main/java/com/harshvardhan/ludex/service/gameservice.java
+@@ -1,7 +1,7 @@
+ package com.harshvardhan.ludex.service;
+ 
+ import java.util.List;
+-import java.util.stream.Collectors;
++
+ 
+ import org.springframework.stereotype.Service;
+ 
+@@ -71,7 +71,7 @@ public class gameservice {
+                 .orElseThrow(() -> new GameNotFoundException(
+                         "Game with ID " + id + " not found"));
+ 
+-        existingGame.setGame_name(dto.getGame_name());
++        existingGame.setGame_name(dto.getName());
+ 
+         genre gameGenre = genreRepository.findById(dto.getGenre_id())
+                 .orElseThrow(() -> new GenreNotFoundException(
+@@ -100,7 +100,7 @@ public class gameservice {
+ 
+         game g = new game();
+ 
+-        g.setGame_name(dto.getGame_name());
++        g.setGame_name(dto.getName());
+ 
+         genre gameGenre = genreRepository.findById(dto.getGenre_id())
+                 .orElseThrow(() -> new GenreNotFoundException(

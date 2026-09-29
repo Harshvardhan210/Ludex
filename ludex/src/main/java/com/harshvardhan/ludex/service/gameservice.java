@@ -1,7 +1,7 @@
 package com.harshvardhan.ludex.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import org.springframework.stereotype.Service;
 
@@ -71,7 +71,7 @@ public class gameservice {
                 .orElseThrow(() -> new GameNotFoundException(
                         "Game with ID " + id + " not found"));
 
-        existingGame.setGame_name(dto.getGame_name());
+        existingGame.setGame_name(dto.getName());
 
         genre gameGenre = genreRepository.findById(dto.getGenre_id())
                 .orElseThrow(() -> new GenreNotFoundException(
@@ -100,7 +100,7 @@ public class gameservice {
 
         game g = new game();
 
-        g.setGame_name(dto.getGame_name());
+        g.setGame_name(dto.getName());
 
         genre gameGenre = genreRepository.findById(dto.getGenre_id())
                 .orElseThrow(() -> new GenreNotFoundException(

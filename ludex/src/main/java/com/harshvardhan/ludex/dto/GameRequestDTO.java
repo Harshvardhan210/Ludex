@@ -1,24 +1,42 @@
 package com.harshvardhan.ludex.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+
 
 /**
  * Data Transfer Object for incoming game creation/update requests.
  * Carries only the fields the client is allowed to supply.
  */
-@Data
 public class GameRequestDTO {
 
-    /** Title of the game. */
     @NotBlank(message = "Game name is required")
-    @Size(min = 2, max = 150, message = "Game name must be between 2 and 150 characters")
-    private String game_name;
+    @Size(
+            min = 2,
+            max = 100,
+            message = "Game name must be between 2 and 100 characters"
+    )
+    private String name;
 
-    /** Short description of the game. */
-    @NotBlank(message = "Genre ID is required")
-    @Positive (message = "Genre ID must be positive")
+    @NotNull(message = "Genre ID is required")
+    @Positive(message = "Genre ID must be positive")
     private Integer genre_id;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getGenre_id() {
+        return genre_id;
+    }
+
+    public void setGenre_id(Integer genre_id) {
+        this.genre_id = genre_id;
+    }
 }
