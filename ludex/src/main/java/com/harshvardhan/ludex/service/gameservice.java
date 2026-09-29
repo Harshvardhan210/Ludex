@@ -9,7 +9,10 @@ import com.harshvardhan.ludex.dto.GameRequestDTO;
 import com.harshvardhan.ludex.dto.GameResponseDTO;
 import com.harshvardhan.ludex.exception.GameNotFoundException;
 import com.harshvardhan.ludex.model.game;
+import com.harshvardhan.ludex.model.genre;
 import com.harshvardhan.ludex.repository.GameRepository;
+import com.harshvardhan.ludex.repository.GenreRepository;
+import com.harshvardhan.ludex.exception.GenreNotFoundException;
 
 /**
  * Service class containing the business logic for game management.
@@ -20,89 +23,107 @@ import com.harshvardhan.ludex.repository.GameRepository;
 public class gameservice {
 
     private final GameRepository gameRepository;
+    private final GenreRepository genreRepository;
 
-    public gameservice(GameRepository gameRepository) {
+    public gameservice(
+            GameRepository gameRepository,
+            GenreRepository genreRepository) {
+
         this.gameRepository = gameRepository;
+        this.genreRepository = genreRepository;
     }
 
-    // ------------------------------------------------------------------ //
-    // Mapper helpers //
-    // ------------------------------------------------------------------ //
+    // CREATE
+    public GameResponseDTO addGame(GameRequestDTO dto) {
 
-    /**
-     * Maps a {@link game} entity to a {@link GameResponseDTO}.
-     */
-    private GameResponseDTO toResponseDTO(game g) {
-        return new GameResponseDTO(
-                g.getGame_id(),
-                g.getGame_name(),
-                g.getGenre(),
-                g.getSection());
+        game g = toEntity(dto);
+
+        game savedGame = gameRepository.save(g);
+
+        return toResponse(savedGame);
     }
 
-    /**
-     * Maps a {@link GameRequestDTO} to a {@link game} entity.
-     */
+    // GET ALL
+    public List<GameResponseDTO> getAllGames() {
+
+        return gameRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    // GET BY ID
+    public GameResponseDTO getGameById(int id) {
+
+        game g = gameRepository.findById(id)
+                .orElseThrow(() -> new GameNotFoundException(
+                        "Game with ID " + id + " not found"));
+
+        return toResponse(g);
+    }
+
+    // UPDATE
+    public GameResponseDTO updateGame(
+            int id,
+            GameRequestDTO dto) {
+
+        game existingGame = gameRepository.findById(id)
+                .orElseThrow(() -> new GameNotFoundException(
+                        "Game with ID " + id + " not found"));
+
+        existingGame.setGame_name(dto.getGame_name());
+
+        genre gameGenre = genreRepository.findById(dto.getGenre_id())
+                .orElseThrow(() -> new GenreNotFoundException(
+                        "Genre with ID " +
+                                dto.getGenre_id() +
+                                " not found"));
+
+        existingGame.setGenre(gameGenre);
+
+        game updatedGame = gameRepository.save(existingGame);
+
+        return toResponse(updatedGame);
+    }
+
+    // DELETE
+    public boolean deleteGame(int id) {
+        if (!gameRepository.existsById(id)) {
+            return false;
+        }
+        gameRepository.deleteById(id);
+        return true;
+    }
+
+    // DTO → ENTITY
     private game toEntity(GameRequestDTO dto) {
+
         game g = new game();
+
         g.setGame_name(dto.getGame_name());
-        g.setGenre(dto.getGenre());
+
+        genre gameGenre = genreRepository.findById(dto.getGenre_id())
+                .orElseThrow(() -> new GenreNotFoundException(
+                        "Genre with ID " +
+                                dto.getGenre_id() +
+                                " not found"));
+
+        g.setGenre(gameGenre);
+
+        // New games always start in Home
+        g.setSection("Home");
+
         return g;
     }
 
-    // ------------------------------------------------------------------ //
-    // Service methods //
-    // ------------------------------------------------------------------ //
+    // ENTITY → DTO
+    private GameResponseDTO toResponse(game g) {
 
-    /**
-     * Returns all games as response DTOs.
-     *
-     * @return A list of {@link GameResponseDTO} objects representing all games
-     */
-    public List<GameResponseDTO> getallgames() {
-        return gameRepository.findAll()
-                .stream()
-                .map(this::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Persists a new game from the request DTO and returns the saved game as a
-     * response DTO.
-     *
-     * @param dto the request payload containing game details
-     * @return the saved game mapped to a {@link GameResponseDTO}
-     */
-    public GameResponseDTO addGames(GameRequestDTO dto) {
-        game saved = gameRepository.save(toEntity(dto));
-        return toResponseDTO(saved);
-    }
-
-    /**
-     * Finds a game by ID and returns it as a response DTO.
-     *
-     * @param id the ID of the game to find
-     * @return the game mapped to a {@link GameResponseDTO}
-     * @throws GameNotFoundException if no game with {@code id} exists
-     */
-    public GameResponseDTO findgame(int id) {
-        game g = gameRepository.findById(id)
-                .orElseThrow(() -> new GameNotFoundException("Game with ID " + id + " not found"));
-        return toResponseDTO(g);
-    }
-
-    /**
-     * Deletes the game with the given ID.
-     *
-     * @param id the ID of the game to delete
-     * @return {@code true} if the game existed and was deleted, {@code false}
-     *         otherwise
-     */
-    public boolean deleteGame(int id) {
-        if (gameRepository.existsById(id)) {
-            gameRepository.deleteById(id);
-            return true;
-        }
-        return false;
+        return new GameResponseDTO(
+                g.getGame_id(),
+                g.getGame_name(),
+                g.getGenre().getGenre_id(),
+                g.getGenre().getName(),
+                g.getSection());
     }
 }

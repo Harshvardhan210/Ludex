@@ -19,30 +19,23 @@ import lombok.Data;
  * getters, setters, equals, hashCode, and toString methods.
  */
 @Data
-@Entity 
+@Entity
 public class game {
 
     /** Unique identifier for the game. */
-    @Id 
-    @GeneratedValue(
-        strategy = GenerationType.IDENTITY
-    )
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int game_id;
 
     /** Name/title of the game. */
     @NotBlank(message = "Game name is required")
-    @Size (
-        min = 2,
-        max = 150,
-        message = "Game name must be between 2 and 100 characters"
-    )
+    @Size(min = 2, max = 150, message = "Game name must be between 2 and 100 characters")
     private String game_name;
 
     /** A brief description of the game. */
-    @NotBlank(message = "Genre is required")
-    @ManyToOne 
-    @JoinColumn (name = "genre_id")
-    private String genre;
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
+    private genre genre;
 
     private String section = "Home";
 

@@ -1,6 +1,7 @@
 package com.harshvardhan.ludex.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class GameRequestDTO {
     private String game_name;
 
     /** Short description of the game. */
-    @NotBlank(message = "Game description is required")
-    private String genre;
+    @NotBlank(message = "Genre ID is required")
+    @Positive (message = "Genre ID must be positive")
+    private Integer genre_id;
 }

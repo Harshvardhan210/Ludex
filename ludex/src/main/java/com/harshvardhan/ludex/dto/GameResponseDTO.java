@@ -21,7 +21,9 @@ public class GameResponseDTO {
     private String game_name;
 
     /** Short description of the game. */
-    private String game_genre;
+    private int genre_id;
+
+    private String genre;
 
     /** Current section of the game (e.g. "Home" or "Favorite"). */
     private String section;

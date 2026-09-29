@@ -38,4 +38,16 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(error);
     }
+
+    @ExceptionHandler(GenreNotFoundException.class)
+public ResponseEntity<ErrorResponse> handleGenreNotFound(
+        GenreNotFoundException e) {
+
+    ErrorResponse error =
+            new ErrorResponse(404, e.getMessage());
+
+    return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(error);
+}
 }
