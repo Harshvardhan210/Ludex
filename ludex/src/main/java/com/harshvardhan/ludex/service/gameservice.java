@@ -16,7 +16,9 @@ import com.harshvardhan.ludex.repository.GenreRepository;
 import com.harshvardhan.ludex.repository.platformRepository;
 import com.harshvardhan.ludex.exception.GenreNotFoundException;
 import com.harshvardhan.ludex.model.GameDetails;
-import com.harshvardhan.ludex.model.Platform;;
+import com.harshvardhan.ludex.model.Platform;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service class containing the business logic for game management.
@@ -54,9 +56,9 @@ public class gameservice {
     }
 
     // GET ALL
-    public List<GameResponseDTO> getAllGames() {
+    public List<GameResponseDTO> getAllGames(Pageable pageable) {
 
-        return gameRepository.findAll()
+        return gameRepository.findAll(pageable)
                 .stream()
                 .map(this::toResponse)
                 .toList();

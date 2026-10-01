@@ -2,14 +2,6 @@ package com.harshvardhan.ludex.controller;
 
 import java.util.List;
 
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.harshvardhan.ludex.dto.GameRequestDTO;
 import com.harshvardhan.ludex.dto.GameResponseDTO;
 
@@ -17,13 +9,7 @@ import com.harshvardhan.ludex.service.gameservice;
 
 import jakarta.validation.Valid;
 
-/**
- * REST Controller for managing game-related API endpoints.
- * Base URL: /game
- */
-
-
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -50,9 +36,9 @@ public class gamecontroller {
 
     // GET ALL
     @GetMapping
-    public List<GameResponseDTO> getAllGames() {
+    public List<GameResponseDTO> getAllGames(Pageable pageable) {
 
-        return gameService.getAllGames();
+        return gameService.getAllGames(pageable);
     }
 
 
