@@ -125,7 +125,9 @@ ludex/
         │   │   │   ├── gamecontroller.java          # Game & Favorites API
         │   │   │   └── healthcontroller.java        # Health check endpoint
         │   │   ├── dto/
-        │   │   │   └── GameRequestDTO.java          # Data Transfer Object for requests
+        │   │   │   ├── GameDetailsDTO.java          # DTO for full game details
+        │   │   │   ├── GameRequestDTO.java          # DTO for incoming requests
+        │   │   │   └── GameResponseDTO.java         # DTO for outgoing responses
         │   │   ├── exception/
         │   │   │   ├── GlobalExceptionHandler.java  # 🛡 Global error handler
         │   │   │   ├── GameNotFoundException.java   # Custom 404 exception
