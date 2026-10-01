@@ -55,7 +55,7 @@ Ludex follows a classic **3-Layer Spring Boot architecture** with a dedicated ex
 │                  CONTROLLER LAYER                        │
 │   gamecontroller.java  │  healthcontroller.java         │
 │   • Receives HTTP requests                              │
-│   • Validates input (@Valid), delegates to Services     │
+│   • Validates input via DTOs (@Valid), delegates to Ser │
 │   • Returns HTTP responses                              │
 └──────────────────────────┬──────────────────────────────┘
                            │
@@ -124,6 +124,8 @@ ludex/
         │   │   ├── controller/
         │   │   │   ├── gamecontroller.java          # Game & Favorites API
         │   │   │   └── healthcontroller.java        # Health check endpoint
+        │   │   ├── dto/
+        │   │   │   └── GameRequestDTO.java          # Data Transfer Object for requests
         │   │   ├── exception/
         │   │   │   ├── GlobalExceptionHandler.java  # 🛡 Global error handler
         │   │   │   ├── GameNotFoundException.java   # Custom 404 exception
