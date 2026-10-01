@@ -3,6 +3,7 @@ package com.harshvardhan.ludex.client;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.harshvardhan.ludex.dto.RawgResponseDTO;
 
@@ -22,12 +23,13 @@ public class RawgClient {
             int page,
             int pageSize) {
 
-        String url = apiUrl
-                + "/games"
-                + "?key=" + apiKey
-                + "&search=" + search
-                + "&page=" + page
-                + "&page_size=" + pageSize;
+        String url = UriComponentsBuilder
+                .fromUriString(apiUrl + "/games")
+                .queryParam("key", apiKey)
+                .queryParam("search", search)
+                .queryParam("page", page)
+                .queryParam("page_size", pageSize)
+                .toUriString();
 
         return restTemplate.getForObject(
                 url,
