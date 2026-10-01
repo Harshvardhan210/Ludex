@@ -22,11 +22,13 @@ public class RawgController {
 @GetMapping("/games")
 public RawgResponseDTO getGamesFromRawg(
         @RequestParam String search,
+        @RequestParam (required = false) String genre,
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "10") int pageSize) {
 
     return rawgService.searchGames(
             search,
+            genre,
             page,
             pageSize
     );

@@ -16,12 +16,14 @@ public class RawgService {
 
     public RawgResponseDTO searchGames(
         String search,
+        String genre,
         int page,
         int pageSize
     )
     {
         return rawgClient.getGames(
            search,
+           genre,
            page,
            pageSize
         );

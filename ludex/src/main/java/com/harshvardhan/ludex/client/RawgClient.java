@@ -18,21 +18,29 @@ public class RawgClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public RawgResponseDTO getGames(
-            String search,
-            int page,
-            int pageSize) {
+ public RawgResponseDTO getGames(
+        String search,
+        String genre,
+        int page,
+        int pageSize) {
 
-        String url = UriComponentsBuilder
-                .fromUriString(apiUrl + "/games")
-                .queryParam("key", apiKey)
-                .queryParam("search", search)
-                .queryParam("page", page)
-                .queryParam("page_size", pageSize)
-                .toUriString();
+    UriComponentsBuilder builder =
+            UriComponentsBuilder
+                    .fromUriString(apiUrl + "/games")
+                    .queryParam("key", apiKey)
+                    .queryParam("search", search)
+                    .queryParam("page", page)
+                    .queryParam("page_size", pageSize);
 
-        return restTemplate.getForObject(
-                url,
-                RawgResponseDTO.class);
+    if (genre != null && !genre.isBlank()) {
+        builder.queryParam("genres", genre);
+    }
+
+    String url = builder.toUriString();
+
+    return restTemplate.getForObject(
+            url,
+            RawgResponseDTO.class
+    );
     }
 }
