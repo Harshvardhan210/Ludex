@@ -4,23 +4,33 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.harshvardhan.ludex.dto.RawgResponseDTO;
+
 @Service
 public class RawgClient {
 
-    @Value ("${rawg.api.key}")
-    private String apikey;
+    @Value("${rawg.api.key}")
+    private String apiKey;
 
-     @Value("${rawg.api.url}")
+    @Value("${rawg.api.url}")
     private String apiUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String getGames(){
-        String url = apiUrl
-            + "/games"
-            + "?key=" + apikey;
+    public RawgResponseDTO getGames(
+            String search,
+            int page,
+            int pageSize) {
 
-        return restTemplate.getForObject(url, String.class);
+        String url = apiUrl
+                + "/games"
+                + "?key=" + apiKey
+                + "&search=" + search
+                + "&page=" + page
+                + "&page_size=" + pageSize;
+
+        return restTemplate.getForObject(
+                url,
+                RawgResponseDTO.class);
     }
-    
 }
