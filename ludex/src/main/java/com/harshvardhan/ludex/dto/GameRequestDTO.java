@@ -1,5 +1,8 @@
 package com.harshvardhan.ludex.dto;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -24,6 +27,11 @@ public class GameRequestDTO {
     @Positive(message = "Genre ID must be positive")
     private Integer genre_id;
 
+    @Valid
+    private GameDetailsDTO gameDetails;
+
+    private List<Integer> platform_ids;
+
     public String getName() {
         return name;
     }
@@ -38,5 +46,21 @@ public class GameRequestDTO {
 
     public void setGenre_id(Integer genre_id) {
         this.genre_id = genre_id;
+    }
+
+    public GameDetailsDTO getGameDetails() {
+        return gameDetails;
+    }
+
+    public void setGameDetails(GameDetailsDTO gameDetails) {
+        this.gameDetails = gameDetails;
+    }
+
+    public List<Integer> getPlatform_ids() {
+        return platform_ids;
+    }
+
+    public void setPlatform_ids(List<Integer> platform_ids) {
+        this.platform_ids = platform_ids;
     }
 }

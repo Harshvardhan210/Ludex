@@ -1,6 +1,9 @@
 package com.harshvardhan.ludex.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,7 +12,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 /**
@@ -37,5 +43,17 @@ public class game {
     private genre genre;
 
     private String section = "Home";
+
+    @OneToOne 
+    @JoinColumn (name = "details_id")
+    private GameDetails gameDetails;
+
+    @ManyToMany
+@JoinTable(
+        name = "game_platform",
+        joinColumns = @JoinColumn(name = "game_id"),
+        inverseJoinColumns = @JoinColumn(name = "platform_id")
+)
+private List<Platform> platforms = new ArrayList<>();
 
 }
