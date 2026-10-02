@@ -1,9 +1,15 @@
 package com.harshvardhan.ludex.service;
 
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
 import com.harshvardhan.ludex.client.RawgClient;
+import com.harshvardhan.ludex.dto.LudexGameDTO;
+import com.harshvardhan.ludex.dto.LudexRawgResponseDTO;
+import com.harshvardhan.ludex.dto.RawgGameDTO;
 import com.harshvardhan.ludex.dto.RawgResponseDTO;
+
 
 @Service
 public class RawgService {
@@ -14,19 +20,42 @@ public class RawgService {
         this.rawgClient = rawgClient;
     }
 
-    public RawgResponseDTO searchGames(
-        String search,
-        String genre,
-        int page,
-        int pageSize
-    )
-    {
-        return rawgClient.getGames(
-           search,
-           genre,
-           page,
-           pageSize
-        );
-    }
+    public LudexRawgResponseDTO searchGames(
+            String search,
+            String genre,
+            int page,
+            int pageSize) {
 
+        RawgResponseDTO rawgResponse =
+                rawgClient.getGames(
+                        search,
+                        genre,
+                        page,
+                        pageSize
+                );
+
+        List<LudexGameDTO> games = new ArrayList<>();
+
+        for (RawgGameDTO rawgGame : rawgResponse.getResults()) {
+
+            LudexGameDTO game = new LudexGameDTO();
+
+            game.setId(rawgGame.getId());
+            game.setName(rawgGame.getName());
+            game.setReleased(rawgGame.getReleased());
+            game.setImage(rawgGame.getBackground_image());
+            game.setRating(rawgGame.getRating());
+
+            games.add(game);
+        }
+
+        LudexRawgResponseDTO response = new LudexRawgResponseDTO();
+
+        response.setTotalGames(rawgResponse.getCount());
+        response.setNextPage(rawgResponse.getNext());
+        response.setPreviousPage(rawgResponse.getPrevious());
+        response.setGames(games);
+
+        return response;
+    }
 }
