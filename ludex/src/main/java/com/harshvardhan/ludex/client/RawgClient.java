@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.harshvardhan.ludex.dto.RawgGameDetailsDTO;
 import com.harshvardhan.ludex.dto.RawgResponseDTO;
 
 @Service
@@ -43,4 +44,17 @@ public class RawgClient {
             RawgResponseDTO.class
     );
     }
+
+   public RawgGameDetailsDTO getGameDetails(int id) {
+
+    String url = UriComponentsBuilder
+            .fromUriString(apiUrl + "/games/" + id)
+            .queryParam("key", apiKey)
+            .toUriString();
+
+    return restTemplate.getForObject(
+            url,
+            RawgGameDetailsDTO.class
+    );
+}
 }

@@ -8,8 +8,8 @@ import com.harshvardhan.ludex.client.RawgClient;
 import com.harshvardhan.ludex.dto.LudexGameDTO;
 import com.harshvardhan.ludex.dto.LudexRawgResponseDTO;
 import com.harshvardhan.ludex.dto.RawgGameDTO;
+import com.harshvardhan.ludex.dto.RawgGameDetailsDTO;
 import com.harshvardhan.ludex.dto.RawgResponseDTO;
-
 
 @Service
 public class RawgService {
@@ -26,13 +26,11 @@ public class RawgService {
             int page,
             int pageSize) {
 
-        RawgResponseDTO rawgResponse =
-                rawgClient.getGames(
-                        search,
-                        genre,
-                        page,
-                        pageSize
-                );
+        RawgResponseDTO rawgResponse = rawgClient.getGames(
+                search,
+                genre,
+                page,
+                pageSize);
 
         List<LudexGameDTO> games = new ArrayList<>();
 
@@ -58,4 +56,10 @@ public class RawgService {
 
         return response;
     }
+
+    public RawgGameDetailsDTO getGameDetails(int id) {
+
+        return rawgClient.getGameDetails(id);
+    }
+
 }

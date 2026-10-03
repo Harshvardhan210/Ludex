@@ -1,12 +1,13 @@
 package com.harshvardhan.ludex.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.harshvardhan.ludex.dto.LudexRawgResponseDTO;
-
+import com.harshvardhan.ludex.dto.RawgGameDetailsDTO;
 import com.harshvardhan.ludex.service.RawgService;
 
 @RestController
@@ -30,7 +31,13 @@ public class RawgController {
                 search,
                 genre,
                 page,
-                pageSize
-        );
+                pageSize);
+    }
+
+    @GetMapping("/games/{id}")
+    public RawgGameDetailsDTO getGameDetails(
+            @PathVariable int id) {
+
+        return rawgService.getGameDetails(id);
     }
 }
