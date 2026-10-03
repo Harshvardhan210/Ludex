@@ -45,7 +45,7 @@ public class RawgClient {
     );
     }
 
-   public RawgGameDetailsDTO getGameDetails(int id) {
+ public RawgGameDetailsDTO getGameDetails(int id) {
 
     String url = UriComponentsBuilder
             .fromUriString(apiUrl + "/games/" + id)

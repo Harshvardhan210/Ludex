@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.harshvardhan.ludex.dto.LudexGameDetailsDTO;
 import com.harshvardhan.ludex.dto.LudexRawgResponseDTO;
-import com.harshvardhan.ludex.dto.RawgGameDetailsDTO;
+
 import com.harshvardhan.ludex.service.RawgService;
 
 @RestController
@@ -35,7 +36,7 @@ public class RawgController {
     }
 
     @GetMapping("/games/{id}")
-    public RawgGameDetailsDTO getGameDetails(
+    public LudexGameDetailsDTO getGameDetails(
             @PathVariable int id) {
 
         return rawgService.getGameDetails(id);

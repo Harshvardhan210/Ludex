@@ -12,4 +12,8 @@ public class RawgGameDetailsDTO {
     private double rating;
     private int ratings_count;
     private int metacritic;
+    public String getName() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getName'");
+    }
 }

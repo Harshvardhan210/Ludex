@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import com.harshvardhan.ludex.client.RawgClient;
 import com.harshvardhan.ludex.dto.LudexGameDTO;
+import com.harshvardhan.ludex.dto.LudexGameDetailsDTO;
 import com.harshvardhan.ludex.dto.LudexRawgResponseDTO;
 import com.harshvardhan.ludex.dto.RawgGameDTO;
 import com.harshvardhan.ludex.dto.RawgGameDetailsDTO;
@@ -57,9 +58,23 @@ public class RawgService {
         return response;
     }
 
-    public RawgGameDetailsDTO getGameDetails(int id) {
+  public LudexGameDetailsDTO getGameDetails(int id) {
 
-        return rawgClient.getGameDetails(id);
-    }
+    RawgGameDetailsDTO rawgGame =
+            rawgClient.getGameDetails(id);
 
+    LudexGameDetailsDTO game =
+            new LudexGameDetailsDTO();
+
+    game.setId(rawgGame.getId());
+    game.setName(rawgGame.getName());
+    game.setDescription(rawgGame.getDescription());
+    game.setReleased(rawgGame.getReleased());
+    game.setImage(rawgGame.getBackground_image());
+    game.setRating(rawgGame.getRating());
+    game.setRatingsCount(rawgGame.getRatings_count());
+    game.setMetacritic(rawgGame.getMetacritic());
+
+    return game;
+}
 }
