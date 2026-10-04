@@ -17,7 +17,6 @@ import com.harshvardhan.ludex.repository.platformRepository;
 import com.harshvardhan.ludex.exception.GenreNotFoundException;
 import com.harshvardhan.ludex.model.GameDetails;
 import com.harshvardhan.ludex.model.Platform;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
