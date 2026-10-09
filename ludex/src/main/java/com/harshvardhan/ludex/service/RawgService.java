@@ -10,6 +10,8 @@ import com.harshvardhan.ludex.dto.LudexGameDetailsDTO;
 import com.harshvardhan.ludex.dto.LudexRawgResponseDTO;
 import com.harshvardhan.ludex.dto.RawgGameDTO;
 import com.harshvardhan.ludex.dto.RawgGameDetailsDTO;
+import com.harshvardhan.ludex.dto.RawgPlatformDTO;
+import com.harshvardhan.ludex.dto.RawgPlatformWrapperDTO;
 import com.harshvardhan.ludex.dto.RawgResponseDTO;
 
 @Service
@@ -58,7 +60,7 @@ public class RawgService {
         return response;
     }
 
-  public LudexGameDetailsDTO getGameDetails(int id) {
+public LudexGameDetailsDTO getGameDetails(int id) {
 
     RawgGameDetailsDTO rawgGame =
             rawgClient.getGameDetails(id);
@@ -74,6 +76,33 @@ public class RawgService {
     game.setRating(rawgGame.getRating());
     game.setRatingsCount(rawgGame.getRatings_count());
     game.setMetacritic(rawgGame.getMetacritic());
+
+    List<RawgPlatformDTO> platforms = new ArrayList<>();
+
+    if (rawgGame.getPlatforms() != null) {
+
+        for (RawgPlatformWrapperDTO wrapper :
+                rawgGame.getPlatforms()) {
+
+            if (wrapper.getPlatform() != null) {
+
+                RawgPlatformDTO platform =
+                        new RawgPlatformDTO();
+
+                platform.setId(
+                        wrapper.getPlatform().getId()
+                );
+
+                platform.setName(
+                        wrapper.getPlatform().getName()
+                );
+
+                platforms.add(platform);
+            }
+        }
+    }
+
+    game.setPlatforms(platforms);
 
     return game;
 }

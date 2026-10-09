@@ -1,9 +1,10 @@
 package com.harshvardhan.ludex.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
-
-@Data 
+@Data
 public class RawgGameDetailsDTO {
 
     private int id;
@@ -14,6 +15,6 @@ public class RawgGameDetailsDTO {
     private double rating;
     private int ratings_count;
     private int metacritic;
+    private List<RawgPlatformWrapperDTO> platforms;
 
-   
 }
