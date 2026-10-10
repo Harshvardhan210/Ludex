@@ -4,7 +4,7 @@ import java.util.List;
 
 import lombok.Data;
 
-@Data 
+@Data
 public class LudexGameDetailsDTO {
 
     private int id;
@@ -15,6 +15,14 @@ public class LudexGameDetailsDTO {
     private double rating;
     private int ratingsCount;
     private int metacritic;
-    private List<RawgPlatformDTO> platform;
-    
+    private List<RawgPlatformDTO> platforms;
+
+    public List<RawgPlatformDTO> getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(List<RawgPlatformDTO> platforms) {
+        this.platforms = platforms;
+    }
+
 }
