@@ -1,5 +1,7 @@
 package com.harshvardhan.ludex.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -9,5 +11,6 @@ public class RawgGameDTO {
     private String released;
     private String background_image;
     private double rating;
+    private List<RawgSearchPlatformDTO> platform;
     
 }

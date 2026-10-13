@@ -13,6 +13,7 @@ import com.harshvardhan.ludex.dto.RawgGameDetailsDTO;
 import com.harshvardhan.ludex.dto.RawgPlatformDTO;
 import com.harshvardhan.ludex.dto.RawgPlatformWrapperDTO;
 import com.harshvardhan.ludex.dto.RawgResponseDTO;
+import com.harshvardhan.ludex.dto.RawgSearchPlatformDTO;
 
 @Service
 public class RawgService {
@@ -23,6 +24,7 @@ public class RawgService {
         this.rawgClient = rawgClient;
     }
 
+    // Search games with pagination and optional genre
     public LudexRawgResponseDTO searchGames(
             String search,
             String genre,
@@ -37,17 +39,43 @@ public class RawgService {
 
         List<LudexGameDTO> games = new ArrayList<>();
 
-        for (RawgGameDTO rawgGame : rawgResponse.getResults()) {
+        if (rawgResponse.getResults() != null) {
 
-            LudexGameDTO game = new LudexGameDTO();
+            for (RawgGameDTO rawgGame : rawgResponse.getResults()) {
 
-            game.setId(rawgGame.getId());
-            game.setName(rawgGame.getName());
-            game.setReleased(rawgGame.getReleased());
-            game.setImage(rawgGame.getBackground_image());
-            game.setRating(rawgGame.getRating());
+                LudexGameDTO game = new LudexGameDTO();
 
-            games.add(game);
+                game.setId(rawgGame.getId());
+                game.setName(rawgGame.getName());
+                game.setReleased(rawgGame.getReleased());
+                game.setImage(rawgGame.getBackground_image());
+                game.setRating(rawgGame.getRating());
+
+                // Map platform information
+                List<RawgSearchPlatformDTO> platforms = new ArrayList<>();
+
+                if (rawgGame.getPlatform() != null) {
+
+                    for (RawgSearchPlatformDTO rawgPlatform : rawgGame.getPlatform()) {
+
+                        if (rawgPlatform != null) {
+
+                            RawgSearchPlatformDTO platform = new RawgSearchPlatformDTO();
+
+                            platform.setId(
+                                    rawgPlatform.getId());
+
+                            platform.setName(
+                                    rawgPlatform.getName());
+
+                            platforms.add(platform);
+                        }
+                    }
+                }
+
+                game.setPlatforms(platforms);
+                games.add(game);
+            }
         }
 
         LudexRawgResponseDTO response = new LudexRawgResponseDTO();
@@ -60,50 +88,47 @@ public class RawgService {
         return response;
     }
 
-public LudexGameDetailsDTO getGameDetails(int id) {
+    // Get details of one game by RAWG ID
+    public LudexGameDetailsDTO getGameDetails(int id) {
 
-    RawgGameDetailsDTO rawgGame =
-            rawgClient.getGameDetails(id);
+        RawgGameDetailsDTO rawgGame = rawgClient.getGameDetails(id);
 
-    LudexGameDetailsDTO game =
-            new LudexGameDetailsDTO();
+        LudexGameDetailsDTO game = new LudexGameDetailsDTO();
 
-    game.setId(rawgGame.getId());
-    game.setName(rawgGame.getName());
-    game.setDescription(rawgGame.getDescription());
-    game.setReleased(rawgGame.getReleased());
-    game.setImage(rawgGame.getBackground_image());
-    game.setRating(rawgGame.getRating());
-    game.setRatingsCount(rawgGame.getRatings_count());
-    game.setMetacritic(rawgGame.getMetacritic());
+        game.setId(rawgGame.getId());
+        game.setName(rawgGame.getName());
+        game.setDescription(rawgGame.getDescription());
+        game.setReleased(rawgGame.getReleased());
+        game.setImage(rawgGame.getBackground_image());
+        game.setRating(rawgGame.getRating());
+        game.setRatingsCount(rawgGame.getRatings_count());
+        game.setMetacritic(rawgGame.getMetacritic());
 
-    List<RawgPlatformDTO> platforms = new ArrayList<>();
+        // Map platform information
+        List<RawgPlatformDTO> platforms = new ArrayList<>();
 
-    if (rawgGame.getPlatforms() != null) {
+        if (rawgGame.getPlatforms() != null) {
 
-        for (RawgPlatformWrapperDTO wrapper :
-                rawgGame.getPlatforms()) {
+            for (RawgPlatformWrapperDTO wrapper : rawgGame.getPlatforms()) {
 
-            if (wrapper.getPlatform() != null) {
+                if (wrapper != null
+                        && wrapper.getPlatform() != null) {
 
-                RawgPlatformDTO platform =
-                        new RawgPlatformDTO();
+                    RawgPlatformDTO platform = new RawgPlatformDTO();
 
-                platform.setId(
-                        wrapper.getPlatform().getId()
-                );
+                    platform.setId(
+                            wrapper.getPlatform().getId());
 
-                platform.setName(
-                        wrapper.getPlatform().getName()
-                );
+                    platform.setName(
+                            wrapper.getPlatform().getName());
 
-                platforms.add(platform);
+                    platforms.add(platform);
+                }
             }
         }
+
+        game.setPlatforms(platforms);
+
+        return game;
     }
-
-    game.setPlatforms(platforms);
-
-    return game;
-}
 }
