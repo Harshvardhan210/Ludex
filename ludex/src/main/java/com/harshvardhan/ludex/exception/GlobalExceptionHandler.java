@@ -50,4 +50,18 @@ public ResponseEntity<ErrorResponse> handleGenreNotFound(
             .status(HttpStatus.NOT_FOUND)
             .body(error);
 }
+
+@ExceptionHandler(ExternalApiException.class)
+public ResponseEntity<ErrorResponse> handleExternalApiException(
+        ExternalApiException ex) {
+
+    ErrorResponse error = new ErrorResponse(
+            HttpStatus.BAD_GATEWAY.value(),
+            ex.getMessage()
+    );
+
+    return ResponseEntity
+            .status(HttpStatus.BAD_GATEWAY)
+            .body(error);
+}
 }
