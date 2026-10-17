@@ -134,11 +134,16 @@ ludex/
     │   │   │   ├── LudexRawgResponseDTO.java # Paginated wrapper for RAWG search
     │   │   │   ├── RawgGameDTO.java      # Raw RAWG result model
     │   │   │   ├── RawgGameDetailsDTO.java # Raw RAWG details model
-    │   │   │   └── RawgResponseDTO.java  # Raw RAWG paginated response model
+    │   │   │   ├── RawgPlatformDTO.java   # RAWG platform details model
+    │   │   │   ├── RawgPlatformWrapperDTO.java # Wrapper for RAWG platform data
+    │   │   │   ├── RawgResponseDTO.java  # Raw RAWG paginated response model
+    │   │   │   ├── RawgSearchPlatformDTO.java # RAWG search platform model
+    │   │   │   └── RawgSearchPlatformWrapperDTO.java # Wrapper for RAWG search platform data
     │   │   ├── exception/
     │   │   │   ├── GlobalExceptionHandler.java # 🛡 Global Exception Handler (@RestControllerAdvice)
     │   │   │   ├── GameNotFoundException.java  # Custom 404 Exception for games
     │   │   │   ├── GenreNotFoundException.java # Custom 404 Exception for genres
+    │   │   │   ├── ExternalApiException.java  # Exception for external API failures
     │   │   │   └── ErrorResponse.java    # Standard error response body
     │   │   ├── model/
     │   │   │   ├── game.java             # Core Game Entity
